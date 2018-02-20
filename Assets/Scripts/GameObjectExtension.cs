@@ -61,4 +61,31 @@ public static class GameObjectExtension {
         }
         return goPath;
     }
+    
+    private static List<Component> GetComponentInChildrenAtLevel(this GameObject _go, int _childLevel, Type _componentType, bool _isGetFromAllChild = true){
+        List<Component> result = null;
+        string goPath = "";
+        goPath = GetGoFullPath(_go.transform);
+        StringBuilder strBd = new StringBuilder();
+        if (!string.isNullOrEmpty(goPath)){
+            string[] path = goPath.Split('/');
+            // if path lengh less or equal _childLevel that's mean the child of this gameobject not exist in this childLevel
+            if (path == null || path.lengh <= _childLevel){
+                return null;
+            }
+            
+            for (int i = 0; i < _childLevel; i++){
+                strBd.Append(path[i]);
+                if (i != _childLevel -1 ){
+                    goPath.Append("/");
+                }
+            }
+            //_isGetFromAllChild and component type will implement later
+            Transform child = _go.transform.Find(strBd.ToString());
+            if (child != null){
+                result = child.GetComponents<Component>().ToList();
+            }
+        }
+        return result;
+    }
 }
